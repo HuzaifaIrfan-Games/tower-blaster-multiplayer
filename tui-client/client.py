@@ -4,7 +4,7 @@ import time
 
 def clearscreen():
     system("cls")
-    print("Pearl before Swine MultiPlayer Clone - Python TUI Client")
+    print("Tower Blaster MultiPlayer Clone - Python TUI Client")
 
 def exitter(msg):
     print(msg)
@@ -57,16 +57,18 @@ def menu():
             exitter("Please Choose from Above")
 
 
-def asknum(msg):
-	anum=None
-	while(anum==None):
-		try:
-			anum=int(input(msg))
-		except:
-			print("Number required")
-			continue
 
-	return anum
+
+# def asknum(msg):
+# 	anum=None
+# 	while(anum==None):
+# 		try:
+# 			anum=int(input(msg))
+# 		except:
+# 			print("Number required")
+# 			continue
+
+# 	return anum
 
 
 
@@ -88,17 +90,15 @@ def asknumrange(msg,high):
 
 
 
-def drawgamecontent(gamecontent):
+# def drawgamecontent(gamecontent):
 
-    for row in gamecontent:
-        for item in row:
-            if item ==1:
-                print("O",end="")
-            else:
-                print("-",end="")
-        print("")
-
-
+#     for row in gamecontent:
+#         for item in row:
+#             if item ==1:
+#                 print("O",end="")
+#             else:
+#                 print("-",end="")
+#         print("")
 
 
 
@@ -113,55 +113,57 @@ def drawgamecontent(gamecontent):
 
 
 
-def checkrow(gameplay,rownum):
-    if rownum<1 or rownum>3:
-        return False
-    nitems=0
-    rowitems=gameplay[rownum-1]
-    for item in rowitems:
-        if item==1:
-            nitems=nitems+1
-    if nitems==0:
-        print("No items in this row please select another")
-        return False
-    return True
+
+
+# def checkrow(gameplay,rownum):
+#     if rownum<1 or rownum>3:
+#         return False
+#     nitems=0
+#     rowitems=gameplay[rownum-1]
+#     for item in rowitems:
+#         if item==1:
+#             nitems=nitems+1
+#     if nitems==0:
+#         print("No items in this row please select another")
+#         return False
+#     return True
         
 
-def checkitems(gameplay,rownum,itemnum):
-    if itemnum==0:
-        return False
-    nitems=0
-    rowitems=gameplay[rownum-1]
-    for item in rowitems:
-        if item==1:
-            nitems=nitems+1
-    if itemnum<=nitems:
-        return True
-    else:
-        print("Too Many")
-        return False
+# def checkitems(gameplay,rownum,itemnum):
+#     if itemnum==0:
+#         return False
+#     nitems=0
+#     rowitems=gameplay[rownum-1]
+#     for item in rowitems:
+#         if item==1:
+#             nitems=nitems+1
+#     if itemnum<=nitems:
+#         return True
+#     else:
+#         print("Too Many")
+#         return False
 
 
 
 
 
-def asknumbers(gameplay,rownum):
-    itemnum=0
-    while(not checkitems(gameplay,rownum,itemnum)):
-          itemnum=asknum("Enter Number of pearls 1-3,4,5\n")
+# def asknumbers(gameplay,rownum):
+#     itemnum=0
+#     while(not checkitems(gameplay,rownum,itemnum)):
+#           itemnum=asknum("Enter Number of pearls 1-3,4,5\n")
 
-    # removeitems(gameplay,rownum,itemnum)
-    sio.emit('removepearls', {"row":rownum,"pearls":itemnum})
-
-
+#     # removeitems(gameplay,rownum,itemnum)
+#     sio.emit('removepearls', {"row":rownum,"pearls":itemnum})
 
 
 
-def askrow(gameplay):
-    rownum=0
-    while(not checkrow(gameplay,rownum)):
-        rownum=asknum("Enter Row Number 1-3\n")
-    asknumbers(gameplay,rownum)
+
+
+# def askrow(gameplay):
+#     rownum=0
+#     while(not checkrow(gameplay,rownum)):
+#         rownum=asknum("Enter Row Number 1-3\n")
+#     asknumbers(gameplay,rownum)
 
 
 
@@ -200,23 +202,23 @@ def askrow(gameplay):
 
 
 
-def drawgame(gameobj):
-    gameplay=gameobj["game"]["gameplay"]
+# def drawgame(gameobj):
+#     gameplay=gameobj["game"]["gameplay"]
 
-    player1=gameobj["game"]["player1"]
-    player2=gameobj["game"]["player2"]
+#     player1=gameobj["game"]["player1"]
+#     player2=gameobj["game"]["player2"]
 
-    print(player1["username"],":",player1["score"])
-    print(player2["username"],":",player2["score"])
+#     print(player1["username"],":",player1["score"])
+#     print(player2["username"],":",player2["score"])
 
 
-    drawgamecontent(gameplay)
-    global username
-    if gameobj["turn"]==True:
-        print(f"Your Turn {username}")
-        askrow(gameplay)
-    else:
-        print(f"{gameobj['opponent']}'s Turn")
+#     drawgamecontent(gameplay)
+#     global username
+#     if gameobj["turn"]==True:
+#         print(f"Your Turn {username}")
+#         askrow(gameplay)
+#     else:
+#         print(f"{gameobj['opponent']}'s Turn")
 
 
 
@@ -255,12 +257,16 @@ def opponentleft(opponentname):
     exitter(f"{opponentname} left the game.")
     menu()
 
+
 @sio.event
 def loadinggame(loader):
     clearscreen()
-    print("Starting Game with",loader["opponent"])
+    print("Starting Game with",loader["opponentname"])
     # drawgame(loader)
-    print(loader["game"])
+
+    
+    for item in loader["game"]:
+        print("                                             ",item)
 
 
 

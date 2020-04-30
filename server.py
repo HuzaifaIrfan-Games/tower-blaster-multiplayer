@@ -41,7 +41,7 @@ def makegame(gotgameid):
 
     global difficulty
 
-    gen=range(difficulty["low"],difficulty["high"]+1)
+    gen=list(range(difficulty["low"],difficulty["high"]+1))
 
     each=10
 
@@ -74,6 +74,14 @@ def makegame(gotgameid):
 
     games[gotgameid]["game"]["remaining"]=gen
 
+
+
+def getarandom(gotgameid):
+    gen=games[gotgameid]["game"]["remaining"]
+    num=random.choice(gen)
+    gen.remove(num)
+    games[gotgameid]["game"]["remaining"]=gen
+    return num
 
 
 @socketio.on('Connection')
@@ -318,7 +326,7 @@ def joingame(gotgameid):
         games[gotgameid]["game"]={"gameid":gotgameid,"player1":{"username":users[games[gotgameid]["player1"]]["username"],"score":0,"turn":False,"game":[]},"player2":{"username":users[games[gotgameid]["player2"]]["username"],"score":0,"turn":True,"game":[]}}
         makegame(gotgameid)
 
-        
+        games[gotgameid]["running"]=getarandom(gotgameid)
 
         #send their own game to players
 

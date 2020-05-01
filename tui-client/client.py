@@ -36,14 +36,14 @@ def menu():
     while(not exit):
         clearscreen()
         print("C. Create Game")
-        print("F. Fetch Game")
+        print("J. Join Game")
         print("X. Exit Game")
         ch=input("Enter Number to Start")
         if ch=="c"or ch=="C":
             exitter("Creating Game")
-            sio.emit('creategame')
+            sio.emit('getdifficulties')
             exit=True
-        elif ch=="f" or ch=="F":
+        elif ch=="j" or ch=="J":
             exitter("Fetching Games")
             sio.emit('fetchgames')
             exit=True
@@ -78,6 +78,17 @@ def asknumrange(msg,high):
 
 
 
+
+@sio.event
+def senddifficulties(levels):
+    
+    for i in range(0,len(levels)):
+
+        print(i+1,":",levels[i]["name"],"Range:",levels[i]["low"],"-",levels[i]["high"],"Tower Height:",levels[i]["towerheight"],"Questions:",levels[i]["getagain"])
+
+    num=asknumrange("Select Difficulty ID",len(levels))
+
+    sio.emit('creategame',num)
 
 
 
@@ -231,7 +242,7 @@ def showgames(freegames):
     if len(freegames)>0:
 
         for i in range(0,len(freegames)):
-            print(i+1,":",freegames[i]["creator"])
+            print(i+1,":",freegames[i]["creator"],freegames[i]["difficulty"]["name"],freegames[i]["difficulty"]["low"],"-",freegames[i]["difficulty"]["high"]," Tower Height:",freegames[i]["difficulty"]["towerheight"]," Questions:",freegames[i]["difficulty"]["getagain"])
         
         gamenum=asknumrange("Enter Game ID",len(freegames))
 

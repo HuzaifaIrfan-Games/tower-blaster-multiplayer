@@ -171,7 +171,7 @@ def playagain():
         if games[gotgameid]["player2"]==senderid:
             games[gotgameid]["p2again"]=True
 
-        print(games[gotgameid])
+        # print(games[gotgameid])
         if ((games[gotgameid]["p1again"]==True) and (games[gotgameid]["p2again"]==True)):
             games[gotgameid]["p1again"]=None
             games[gotgameid]["p2again"]=None
@@ -323,8 +323,8 @@ def changetower(gottowerheight):
                     
                 if win==1:
                     games[gotgameid]["game"]["player1"]["score"]=games[gotgameid]["game"]["player1"]["score"]+1
-                    emit("winner" ,room=games[gotgameid]["player1"])
-                    emit("looser" ,room=games[gotgameid]["player2"])
+                    emit("winner",{"yourname":games[gotgameid]["game"]["player1"]["username"],"yourgame":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentgame":games[gotgameid]["game"]["player2"]["game"]} ,room=games[gotgameid]["player1"])
+                    emit("looser",{"yourname":games[gotgameid]["game"]["player2"]["username"],"yourgame":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentgame":games[gotgameid]["game"]["player1"]["game"]} ,room=games[gotgameid]["player2"])
 
 
 
@@ -372,8 +372,8 @@ def changetower(gottowerheight):
                     
                 if win==1:
                     games[gotgameid]["game"]["player2"]["score"]=games[gotgameid]["game"]["player2"]["score"]+1
-                    emit("winner" ,room=games[gotgameid]["player2"])
-                    emit("looser" ,room=games[gotgameid]["player1"])
+                    emit("winner",{"yourname":games[gotgameid]["game"]["player2"]["username"],"yourgame":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentgame":games[gotgameid]["game"]["player1"]["game"]} ,room=games[gotgameid]["player2"])
+                    emit("looser",{"yourname":games[gotgameid]["game"]["player1"]["username"],"yourgame":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentgame":games[gotgameid]["game"]["player2"]["game"]} ,room=games[gotgameid]["player1"])
 
 
 

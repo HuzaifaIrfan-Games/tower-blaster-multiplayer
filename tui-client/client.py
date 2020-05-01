@@ -286,7 +286,7 @@ def loadinggame(loader):
 
         if(loader["getagain"]>0):
             askq=input("Want to use Question? y / N")
-            if askq=="y":
+            if askq=="y"or askq=="Y":
                 sio.emit('getquestion')
             else:
                 num=asknumrange("Select your Height",(i-1))
@@ -328,9 +328,20 @@ def playagain():
 
 
 @sio.event
-def winner():
+def winner(obj):
     clearscreen()
     print("You Win")
+
+    space="                                             "
+    
+    print(obj["opponentname"],space,obj["yourname"])
+
+    height= len(obj["yourgame"])
+
+    for i in range(0,height):
+        print(obj["opponentgame"][i],space,obj["yourgame"][i])
+
+    print("\n")
 
     playagain()
 
@@ -338,9 +349,20 @@ def winner():
 
 
 @sio.event
-def looser():
+def looser(obj):
     clearscreen()
     print("You Lose")
+
+    space="                                             "
+    
+    print(obj["opponentname"],space,obj["yourname"])
+
+    height= len(obj["yourgame"])
+
+    for i in range(0,height):
+        print(obj["opponentgame"][i],space,obj["yourgame"][i])
+
+    print("\n")
 
     playagain()
 

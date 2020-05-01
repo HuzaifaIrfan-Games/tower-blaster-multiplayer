@@ -30,6 +30,7 @@ users={}
 
 games={}
 
+difficulties=[{"name":"easy","high":15,"low":1,"getagain":2,"towerheight":5}]
 
 difficulty={"high":15,"low":1,"getagain":2,"towerheight":5}
 
@@ -90,7 +91,7 @@ def Connection(username):
     userobj={"userid":request.sid,"username":username,"connected":True,"opponent":None,"gameid":None}
     users[request.sid]=userobj
     # print(users)
-    # emit("sendgame",{"players":players,"gameplay":gameplay},broadcast=True)
+
 
 
 
@@ -204,40 +205,6 @@ def playagain():
 
 
 
-
-# def chkdelpearl(gotgameid,gameplay,row,n):
-#     global games
-#     leftinrow=0
-#     for item in gameplay[row-1]:
-#         if item==1:
-#             leftinrow= leftinrow+1
-    
-#     if leftinrow>=n:
-#         tempgameplay=gameplay
-#         removed=0
-#         temprow=gameplay[row-1]
-#         length=len(temprow)
-#         for i in range(0,length):
-#             if removed < n:
-#                 if temprow[i]==1:
-#                     temprow[i]=0
-#                     removed= removed+1
-
-        
-#         tempgameplay[row-1]=temprow
-#         games[gotgameid]["game"]["gameplay"]=tempgameplay
-
-#         left=0
-#         for arow in tempgameplay:
-#             for item in arow:
-#                 if item==1:
-#                     left=left+1
-        
-#         if left<=1:
-#             return 1
-
-
-#     return 0
 
 
 @socketio.on('getquestion')

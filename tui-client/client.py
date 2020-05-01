@@ -31,8 +31,6 @@ def menu():
 
 
 
-    # time.sleep(1)
-
 
 
     while(not exit):
@@ -59,17 +57,6 @@ def menu():
 
 
 
-# def asknum(msg):
-# 	anum=None
-# 	while(anum==None):
-# 		try:
-# 			anum=int(input(msg))
-# 		except:
-# 			print("Number required")
-# 			continue
-
-# 	return anum
-
 
 
 def asknumrange(msg,high):
@@ -86,139 +73,6 @@ def asknumrange(msg,high):
 			anum=None
 
 	return anum
-
-
-
-
-# def drawgamecontent(gamecontent):
-
-#     for row in gamecontent:
-#         for item in row:
-#             if item ==1:
-#                 print("O",end="")
-#             else:
-#                 print("-",end="")
-#         print("")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def checkrow(gameplay,rownum):
-#     if rownum<1 or rownum>3:
-#         return False
-#     nitems=0
-#     rowitems=gameplay[rownum-1]
-#     for item in rowitems:
-#         if item==1:
-#             nitems=nitems+1
-#     if nitems==0:
-#         print("No items in this row please select another")
-#         return False
-#     return True
-        
-
-# def checkitems(gameplay,rownum,itemnum):
-#     if itemnum==0:
-#         return False
-#     nitems=0
-#     rowitems=gameplay[rownum-1]
-#     for item in rowitems:
-#         if item==1:
-#             nitems=nitems+1
-#     if itemnum<=nitems:
-#         return True
-#     else:
-#         print("Too Many")
-#         return False
-
-
-
-
-
-# def asknumbers(gameplay,rownum):
-#     itemnum=0
-#     while(not checkitems(gameplay,rownum,itemnum)):
-#           itemnum=asknum("Enter Number of pearls 1-3,4,5\n")
-
-#     # removeitems(gameplay,rownum,itemnum)
-#     sio.emit('removepearls', {"row":rownum,"pearls":itemnum})
-
-
-
-
-
-# def askrow(gameplay):
-#     rownum=0
-#     while(not checkrow(gameplay,rownum)):
-#         rownum=asknum("Enter Row Number 1-3\n")
-#     asknumbers(gameplay,rownum)
-
-
-
-
-
-
-
-# def removeitems(rownum,itemnum):
-#     global gameplay
-#     removed=0
-#     temprow=gameplay[rownum-1]
-#     length=len(temprow)
-#     for i in range(0,length):
-#         if removed < itemnum:
-#             if temprow[i]==1:
-#                 temprow[i]=0
-#                 removed= removed+1
-#     gameplay[rownum-1]=temprow
-#     #print(gameplay)
-#     input("")
-#     sio.emit('sendgameplay', gameplay)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def drawgame(gameobj):
-#     gameplay=gameobj["game"]["gameplay"]
-
-#     player1=gameobj["game"]["player1"]
-#     player2=gameobj["game"]["player2"]
-
-#     print(player1["username"],":",player1["score"])
-#     print(player2["username"],":",player2["score"])
-
-
-#     drawgamecontent(gameplay)
-#     global username
-#     if gameobj["turn"]==True:
-#         print(f"Your Turn {username}")
-#         askrow(gameplay)
-#     else:
-#         print(f"{gameobj['opponent']}'s Turn")
 
 
 
@@ -366,11 +220,6 @@ def looser(obj):
 
     playagain()
 
-
-# @sio.event
-# def startgame(game):
-#     clearscreen()
-#     exitter("Starting Game")
 
 
 

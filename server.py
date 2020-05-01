@@ -1,8 +1,59 @@
 
+##############################################################################################################
+##############################################################################################################
+##############################################################################################################
+##########          ###          ####  ##  ##  ##         ###         ########################################
+##############  #######  ######  ####  ##  ##  ##  ##########  #####  ########################################
+##############  #######  ######  ####  ##  ##  ##         ###         ########################################
+##############  #######  ######  ####  ##  ##  ##  ##########  ##   ##########################################
+##############  #######          #####        ###         ###  ####   ########################################
+##############################################################################################################
+##############################################################################################################
+##############################################################################################################
 
-port=5000
+##############################################################################################################
+##############################################################################################################
+##############################################################################################################
+###########       ####  ########       ##       ##        ##         ###         #############################
+###########  ####  ###  ########  ###  ##  ##########  #####  ##########  #####  #############################
+###########      #####  ########       ##       #####  #####         ###         #############################
+###########  ####  ###  ########  ###  #######  #####  #####  ##########  ##   ###############################
+###########       ####        ##  ###  ##       #####  #####         ###  ####   #############################
+##############################################################################################################
+##############################################################################################################
+##############################################################################################################
 
-print("Tower Blaster Multiplayer Clone Server")
+
+
+
+
+print("Tower Blaster Multiplayer Clone Server Made By Huzaifa Irfan")
+
+
+
+
+##############################################################################################################
+#########################################  Server Configuration importing  ###################################
+##############################################################################################################
+
+from conf import difficulties,port
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################
+#########################################  Importing Flask and Socket Confs ##################################
+##############################################################################################################
+
+
+#Importing
+
 import time
 import random
 
@@ -12,29 +63,41 @@ copy_current_request_context
 from flask_socketio import SocketIO, emit, disconnect
 
 
-async_mode = None
 
+#disabling Logger
+
+async_mode = None
 app = Flask(__name__, static_url_path='')
 import logging
 logss = logging.getLogger('werkzeug')
 logss.disabled = True
+
 
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
 
 
 
+##############################################################################################################
+############################  User and Games dictionary lists Configurations  ################################
+##############################################################################################################
 
 
 users={}
 
 games={}
 
-difficulties=[{"name":"easy","high":15,"low":1,"getagain":2,"towerheight":5},{"name":"hard","high":50,"low":1,"getagain":10,"towerheight":20},{"name":"veryhard","high":100,"low":1,"getagain":15,"towerheight":30}]
 
 
 
+##############################################################################################################
+#########################################  Used Custom Functions #############################################
+##############################################################################################################
 
+
+####################
+#new game generator
+####################
 
 def makegame(gotgameid):
     global games
@@ -78,6 +141,10 @@ def makegame(gotgameid):
 
 
 
+###############
+#####getting random number from list to start game or change running
+###############
+
 def getarandom(gotgameid):
     gen=games[gotgameid]["game"]["remaining"]
     num=random.choice(gen)
@@ -86,12 +153,50 @@ def getarandom(gotgameid):
     return num
 
 
+
+
+##############################
+##### To check winner of game
+##############################
+
+
+def chkwinner(gamecont):
+    win=1
+
+
+    for i in range(1,len(gamecont)):
+        if(gamecont[i]<gamecont[i-1]):
+            win=0
+
+
+    return win
+
+
+
+
+##############################################################################################################
+#########################################  Socket IO  Socket End Points ######################################
+##############################################################################################################
+
+
+
+
+
+####################
+##### New User Connection to send username
+####################
+
 @socketio.on('Connection')
 def Connection(username):
     global users
     userobj={"userid":request.sid,"username":username,"connected":True,"opponent":None,"gameid":None}
     users[request.sid]=userobj
-    # print(users)
+    print(username,"Connected")
+
+
+####################
+##### Send Difficulty list to create Game
+####################
 
 @socketio.on('getdifficulties')
 def getdifficulties():
@@ -99,11 +204,18 @@ def getdifficulties():
     emit("senddifficulties",difficulties)
 
 
+
+####################
+##### Creating New Game with difficulty
+####################
+
 @socketio.on('creategame')
 def creategame(diffid):
     global users
     global games
     global difficulties
+
+    #generate random Game ID
     gameid=str(random.getrandbits(128))
 
     if (diffid>0 and diffid<=len(difficulties)):
@@ -125,6 +237,9 @@ def creategame(diffid):
 
 
 
+####################
+##### Fetch Game list
+####################
 
 @socketio.on('fetchgames')
 def fetchgames():
@@ -137,7 +252,9 @@ def fetchgames():
     emit("showgames",freegames)
 
 
-
+####################
+##### User Doesn't want to Play again
+####################
 
 @socketio.on('noplayagain')
 def noplayagain():
@@ -166,7 +283,9 @@ def noplayagain():
         games[gotgameid]["p2again"]=False
 
 
-
+####################
+##### User want to Play again
+####################
 
 
 @socketio.on('playagain')
@@ -221,6 +340,10 @@ def playagain():
 
 
 
+####################
+##### Get Another Random Number from List 
+####################
+
 
 @socketio.on('getquestion')
 def getquestion():
@@ -228,6 +351,8 @@ def getquestion():
     global users
     senderid=request.sid
     gotgameid=users[senderid]["gameid"]
+
+    #check senders
     
     if games[gotgameid]["player1"]==senderid:
         #sender is player1
@@ -266,18 +391,14 @@ def getquestion():
 
 
 
-def chkwinner(gamecont):
-    win=1
 
 
-    for i in range(1,len(gamecont)):
-        if(gamecont[i]<gamecont[i-1]):
-            win=0
 
 
-    return win
 
-
+###################################
+##### Change The tower Block with Running and change turns and running chk winner
+###################################
 
 @socketio.on('changetower')
 def changetower(gottowerheight):
@@ -387,64 +508,68 @@ def changetower(gottowerheight):
 
 
 
-
+############################################
+##### Other User Joining the created game by the game id
+############################################
 
 @socketio.on('joingame')
 def joingame(gotgameid):
     global games
     global users
 
-    # try:
+    try:
 
-    if games[gotgameid]["player2"]==None:
-        games[gotgameid]["player2"]=request.sid
-        users[request.sid]["gameid"]=gotgameid
-        users[request.sid]["opponent"]=games[gotgameid]["player1"]
-        users[games[gotgameid]["player1"]]["opponent"]=games[gotgameid]["player2"]
-
-
-        # game creation
-        games[gotgameid]["game"]={"gameid":gotgameid,"player1":{"username":users[games[gotgameid]["player1"]]["username"],"score":0,"turn":False,"game":[]},"player2":{"username":users[games[gotgameid]["player2"]]["username"],"score":0,"turn":True,"game":[]}}
-        makegame(gotgameid)
-
-        games[gotgameid]["running"]=getarandom(gotgameid)
-
-        #send their own game to players
+        if games[gotgameid]["player2"]==None:
+            games[gotgameid]["player2"]=request.sid
+            users[request.sid]["gameid"]=gotgameid
+            users[request.sid]["opponent"]=games[gotgameid]["player1"]
+            users[games[gotgameid]["player1"]]["opponent"]=games[gotgameid]["player2"]
 
 
-        #checking users turn
+            # game creation
+            games[gotgameid]["game"]={"gameid":gotgameid,"player1":{"username":users[games[gotgameid]["player1"]]["username"],"score":0,"turn":False,"game":[]},"player2":{"username":users[games[gotgameid]["player2"]]["username"],"score":0,"turn":True,"game":[]}}
+            makegame(gotgameid)
 
-        if(games[gotgameid]["game"]["player1"]["turn"]==True):
+            games[gotgameid]["running"]=getarandom(gotgameid)
 
-            emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
-        else:
-            emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            #send their own game to players
+
+
+            #checking users turn
+
+            if(games[gotgameid]["game"]["player1"]["turn"]==True):
+
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            else:
+                emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            
+
+
+            if(games[gotgameid]["game"]["player2"]["turn"]==True):
+        
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+            else:
+
+                emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+
+
         
 
-
-        if(games[gotgameid]["game"]["player2"]["turn"]==True):
-    
-            emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
-
         else:
-
-            emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
-
-
-
-    
-
-    else:
-        emit("notfree",games[gotgameid]["creator"])
-    
-    # except:
-    #     print("Got Wrong Game ID from Joining User")
+            emit("notfree",games[gotgameid]["creator"])
+        
+    except:
+        print("Got Wrong Game ID from Joining User")
 
 
 
 
 
-
+####################
+#####  User Disconnection
+####################
 
 
 @socketio.on('disconnect')
@@ -470,6 +595,10 @@ def disconnected():
         print("UserName ID not created before Disconnecting")
 
 
+
+##############################################################################################################
+######################################### Starting Socket IO Server ##########################################
+##############################################################################################################
 
 if __name__ == '__main__':
     print("Server started on port "+f"{port}")

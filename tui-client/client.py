@@ -18,8 +18,8 @@ import socketio
 
 sio = socketio.Client()
 
-# username=input("Enter Your Name??\n")
-username="player"
+username=input("Enter Your Name??\n")
+# username="player"
 
 
             

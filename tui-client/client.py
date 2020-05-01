@@ -18,8 +18,8 @@ import socketio
 
 sio = socketio.Client()
 
-username=input("Enter Your Name??\n")
-# username="player"
+# username=input("Enter Your Name??\n")
+username="player"
 
 
             
@@ -261,19 +261,54 @@ def opponentleft(opponentname):
 @sio.event
 def loadinggame(loader):
     clearscreen()
-    print("Starting Game with",loader["opponentname"])
-    # drawgame(loader)
+    print(loader["yourname"],"Playing Game with",loader["opponentname"])
 
+
+    space="                                             "
     
+    print(loader["opponentname"],space,loader["yourname"])
+    print("Score:",loader["opponentscore"],space,"Score:",loader["yourscore"],"\n")
+
+    i=1
     for item in loader["game"]:
-        print("                                             ",item)
+        print("    X",space,i,":",item)
+        i=i+1
+
+    print("\n")
+
+    print("Questions left:" ,loader["getagain"])
+
+    if(loader["turn"]==True):
+        print("Your Turn",loader["yourname"])
+
+        print("Running : ",loader["running"])
+
+
+        if(loader["getagain"]>0):
+            askq=input("Want to use Question? y / N")
+            if askq=="y":
+                sio.emit('getquestion')
+            else:
+                num=asknumrange("Select your Height",10)
+                sio.emit('changetower',num)
+
+        else:
+            num=asknumrange("Select your Height",10)
+            sio.emit('changetower',num)
+
+
+
+
+
+    else:
+        print(loader["opponentname"]," Turn")
 
 
 
 @sio.event
 def nextturn(gameobj):
     clearscreen()
-    drawgame(gameobj)
+    
 
 
 @sio.event

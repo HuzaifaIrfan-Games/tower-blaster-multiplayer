@@ -31,7 +31,7 @@ users={}
 games={}
 
 
-difficulty={"high":40,"low":1,"getagain":5}
+difficulty={"high":1000,"low":1,"getagain":5}
 
 
 
@@ -181,11 +181,26 @@ def playagain():
             #refresh gameplay
             makegame(gotgameid)
             
+            games[gotgameid]["running"]=getarandom(gotgameid)
+
+            #send their own game to players
+            #checking users turn
+
+            if(games[gotgameid]["game"]["player1"]["turn"]==True):
+
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            else:
+                emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            
 
 
-#send their own game to players
-            emit("loadinggame",{"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
-            emit("loadinggame",{"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+            if(games[gotgameid]["game"]["player2"]["turn"]==True):
+        
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+            else:
+
+                emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
 
 
@@ -225,20 +240,61 @@ def playagain():
 #     return 0
 
 
+@socketio.on('getquestion')
+def getquestion():
+    global games
+    global users
+    senderid=request.sid
+    gotgameid=users[senderid]["gameid"]
+    
+    if games[gotgameid]["player1"]==senderid:
+        #sender is player1
+        if games[gotgameid]["game"]["player1"]["turn"]==True:
+        
+            if games[gotgameid]["game"]["player1"]["getagain"]>0:
+
+                temprunning=games[gotgameid]["running"]
+                games[gotgameid]["running"]=getarandom(gotgameid)
+                remaining=games[gotgameid]["game"]["remaining"]
+                remaining.append(temprunning)
+                games[gotgameid]["game"]["remaining"]=remaining
+
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+
+    
+    if games[gotgameid]["player2"]==senderid:
+        #sender is player1
+        if games[gotgameid]["game"]["player2"]["turn"]==True:
+        
+            if games[gotgameid]["game"]["player2"]["getagain"]>0:
+
+                temprunning=games[gotgameid]["running"]
+                games[gotgameid]["running"]=getarandom(gotgameid)
+                remaining=games[gotgameid]["game"]["remaining"]
+                remaining.append(temprunning)
+                games[gotgameid]["game"]["remaining"]=remaining
+
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
 
 
-
-
-# @socketio.on('removepearls')
-# def removepearls(obj):
+# @socketio.on('changetower')
+# def changetower(towerheight):
 #     global games
 #     global users
 #     senderid=request.sid
 #     gotgameid=users[senderid]["gameid"]
     
-#     # print(obj)
-#     gameplay=games[gotgameid]["game"]["gameplay"]
+
+#     if games[gotgameid]["player1"]==senderid:
+#         #sender is player1
+#         if games[gotgameid]["game"]["player1"]["turn"]==True:
+#              #change turns
+#             games[gotgameid]["game"]["player1"]["turn"] = not games[gotgameid]["game"]["player1"]["turn"]
+#             games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
+
+
+
 
 
 
@@ -330,9 +386,24 @@ def joingame(gotgameid):
 
         #send their own game to players
 
-        emit("loadinggame",{"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
-        emit("loadinggame",{"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
+        #checking users turn
+
+        if(games[gotgameid]["game"]["player1"]["turn"]==True):
+
+            emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+        else:
+            emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+        
+
+
+        if(games[gotgameid]["game"]["player2"]["turn"]==True):
+       
+            emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+        else:
+
+            emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
 
 

@@ -31,7 +31,7 @@ users={}
 games={}
 
 
-difficulty={"high":1000,"low":1,"getagain":5}
+difficulty={"high":50,"low":1,"getagain":5,"towerheight":20}
 
 
 
@@ -43,7 +43,7 @@ def makegame(gotgameid):
 
     gen=list(range(difficulty["low"],difficulty["high"]+1))
 
-    each=10
+    each=difficulty["towerheight"]
 
     #gen for player 1
 
@@ -259,11 +259,13 @@ def getquestion():
                 remaining.append(temprunning)
                 games[gotgameid]["game"]["remaining"]=remaining
 
+                games[gotgameid]["game"]["player1"]["getagain"]=games[gotgameid]["game"]["player1"]["getagain"]-1
+
                 emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
 
     
     if games[gotgameid]["player2"]==senderid:
-        #sender is player1
+        #sender is player2
         if games[gotgameid]["game"]["player2"]["turn"]==True:
         
             if games[gotgameid]["game"]["player2"]["getagain"]>0:
@@ -274,89 +276,120 @@ def getquestion():
                 remaining.append(temprunning)
                 games[gotgameid]["game"]["remaining"]=remaining
 
+                games[gotgameid]["game"]["player2"]["getagain"]=games[gotgameid]["game"]["player2"]["getagain"]-1
+
                 emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
 
 
-# @socketio.on('changetower')
-# def changetower(towerheight):
-#     global games
-#     global users
-#     senderid=request.sid
-#     gotgameid=users[senderid]["gameid"]
+
+
+def chkwinner(gamecont):
+    return 0
+
+
+
+@socketio.on('changetower')
+def changetower(gottowerheight):
+    global games
+    global users
+    senderid=request.sid
+    gotgameid=users[senderid]["gameid"]
     
 
-#     if games[gotgameid]["player1"]==senderid:
-#         #sender is player1
-#         if games[gotgameid]["game"]["player1"]["turn"]==True:
-#              #change turns
-#             games[gotgameid]["game"]["player1"]["turn"] = not games[gotgameid]["game"]["player1"]["turn"]
-#             games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
+    if games[gotgameid]["player1"]==senderid:
+        #sender is player1
+        if games[gotgameid]["game"]["player1"]["turn"]==True:
+             #change turns
+            games[gotgameid]["game"]["player1"]["turn"] = not games[gotgameid]["game"]["player1"]["turn"]
+            games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
+
+            if( ( gottowerheight>0 ) and ( gottowerheight <= len(games[gotgameid]["game"]["player1"]["game"]) ) ):
+                tempitem=games[gotgameid]["game"]["player1"]["game"][gottowerheight]
+                games[gotgameid]["game"]["player1"]["game"][gottowerheight]=games[gotgameid]["running"]
+                games[gotgameid]["running"]=tempitem
+
+                #check winner
+                win=chkwinner(games[gotgameid]["game"]["player1"]["game"])
+
+                    
+                if win==1:
+                    games[gotgameid]["game"]["player1"]["score"]=games[gotgameid]["game"]["player1"]["score"]+1
+                    emit("winner" ,room=games[gotgameid]["player1"])
+                    emit("looser" ,room=games[gotgameid]["player2"])
+
+
+
+                else:
+
+                    #emit next turn
+
+                        #checking users turn
+
+                    if(games[gotgameid]["game"]["player1"]["turn"]==True):
+
+                        emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+                    else:
+                        emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+                    
+
+
+                    if(games[gotgameid]["game"]["player2"]["turn"]==True):
+                
+                        emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+                    else:
+
+                        emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
 
 
 
 
+    if games[gotgameid]["player2"]==senderid:
+        #sender is player1
+        if games[gotgameid]["game"]["player2"]["turn"]==True:
+             #change turns
+            games[gotgameid]["game"]["player1"]["turn"] = not games[gotgameid]["game"]["player1"]["turn"]
+            games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
+
+            if( ( gottowerheight>0 ) and ( gottowerheight <= len(games[gotgameid]["game"]["player2"]["game"]) ) ):
+                tempitem=games[gotgameid]["game"]["player2"]["game"][gottowerheight]
+                games[gotgameid]["game"]["player2"]["game"][gottowerheight]=games[gotgameid]["running"]
+                games[gotgameid]["running"]=tempitem
+
+                #check winner
+                win=chkwinner(games[gotgameid]["game"]["player2"]["game"])
+
+                    
+                if win==1:
+                    games[gotgameid]["game"]["player2"]["score"]=games[gotgameid]["game"]["player2"]["score"]+1
+                    emit("winner" ,room=games[gotgameid]["player2"])
+                    emit("looser" ,room=games[gotgameid]["player1"])
 
 
 
-#     if games[gotgameid]["player1"]==senderid:
-#         #sender is player1
-#         if games[gotgameid]["game"]["player1"]["turn"]==True:
-#             #its player1 turn
-#             win=chkdelpearl(gotgameid,gameplay,obj["row"],obj["pearls"])
+                else:
 
-#             # change turns
-#             games[gotgameid]["game"]["player1"]["turn"] = not games[gotgameid]["game"]["player1"]["turn"]
-#             games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
+                    #emit next turn
 
+                        #checking users turn
 
-#             if win==1:
-#                 games[gotgameid]["game"]["player1"]["score"]=games[gotgameid]["game"]["player1"]["score"]+1
-#                 emit("winner" ,room=games[gotgameid]["player1"])
-#                 emit("looser" ,room=games[gotgameid]["player2"])
+                    if(games[gotgameid]["game"]["player1"]["turn"]==True):
+
+                        emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+                    else:
+                        emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+                    
 
 
+                    if(games[gotgameid]["game"]["player2"]["turn"]==True):
+                
+                        emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
-#             else:
+                    else:
 
-#                 #emit next turn
-#                 emit("nextturn",{"game":games[gotgameid]["game"],"opponent":games[gotgameid]["game"]["player2"]["username"],"turn":games[gotgameid]["game"]["player1"]["turn"]}  ,room=games[gotgameid]["player1"])
-#                 emit("nextturn",{"game":games[gotgameid]["game"],"opponent":games[gotgameid]["game"]["player1"]["username"],"turn":games[gotgameid]["game"]["player2"]["turn"]}  ,room=games[gotgameid]["player2"])
-
-
-
-
-
-
-
-#     if games[gotgameid]["player2"]==senderid:
-#         #sender is player2
-#         if games[gotgameid]["game"]["player2"]["turn"]==True:
-#             #its player2 turn
-#             win=chkdelpearl(gotgameid,gameplay,obj["row"],obj["pearls"])
-
-#             # change turns
-#             games[gotgameid]["game"]["player1"]["turn"] = not games[gotgameid]["game"]["player1"]["turn"]
-#             games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
-
-#             if win==1:
-#                 games[gotgameid]["game"]["player2"]["score"]=games[gotgameid]["game"]["player2"]["score"]+1
-#                 emit("winner" ,room=games[gotgameid]["player2"])
-#                 emit("looser" ,room=games[gotgameid]["player1"])
-
-
-
-
-#             else:
-
-#                 #emit next turn
-#                 emit("nextturn",{"game":games[gotgameid]["game"],"opponent":games[gotgameid]["game"]["player2"]["username"],"turn":games[gotgameid]["game"]["player1"]["turn"]}  ,room=games[gotgameid]["player1"])
-#                 emit("nextturn",{"game":games[gotgameid]["game"],"opponent":games[gotgameid]["game"]["player1"]["username"],"turn":games[gotgameid]["game"]["player2"]["turn"]}  ,room=games[gotgameid]["player2"])
-
-
-
-
+                        emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
 
 
 

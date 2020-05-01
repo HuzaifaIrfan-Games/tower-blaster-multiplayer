@@ -289,11 +289,11 @@ def loadinggame(loader):
             if askq=="y":
                 sio.emit('getquestion')
             else:
-                num=asknumrange("Select your Height",10)
+                num=asknumrange("Select your Height",(i-1))
                 sio.emit('changetower',num)
 
         else:
-            num=asknumrange("Select your Height",10)
+            num=asknumrange("Select your Height",(i-1))
             sio.emit('changetower',num)
 
 

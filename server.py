@@ -31,7 +31,7 @@ users={}
 games={}
 
 
-difficulty={"high":50,"low":1,"getagain":5,"towerheight":20}
+difficulty={"high":15,"low":1,"getagain":2,"towerheight":5}
 
 
 
@@ -285,7 +285,15 @@ def getquestion():
 
 
 def chkwinner(gamecont):
-    return 0
+    win=1
+
+
+    for i in range(1,len(gamecont)):
+        if(gamecont[i]<gamecont[i-1]):
+            win=0
+
+
+    return win
 
 
 
@@ -305,8 +313,8 @@ def changetower(gottowerheight):
             games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
 
             if( ( gottowerheight>0 ) and ( gottowerheight <= len(games[gotgameid]["game"]["player1"]["game"]) ) ):
-                tempitem=games[gotgameid]["game"]["player1"]["game"][gottowerheight]
-                games[gotgameid]["game"]["player1"]["game"][gottowerheight]=games[gotgameid]["running"]
+                tempitem=games[gotgameid]["game"]["player1"]["game"][gottowerheight-1]
+                games[gotgameid]["game"]["player1"]["game"][gottowerheight-1]=games[gotgameid]["running"]
                 games[gotgameid]["running"]=tempitem
 
                 #check winner
@@ -354,8 +362,8 @@ def changetower(gottowerheight):
             games[gotgameid]["game"]["player2"]["turn"] = not games[gotgameid]["game"]["player2"]["turn"]
 
             if( ( gottowerheight>0 ) and ( gottowerheight <= len(games[gotgameid]["game"]["player2"]["game"]) ) ):
-                tempitem=games[gotgameid]["game"]["player2"]["game"][gottowerheight]
-                games[gotgameid]["game"]["player2"]["game"][gottowerheight]=games[gotgameid]["running"]
+                tempitem=games[gotgameid]["game"]["player2"]["game"][gottowerheight-1]
+                games[gotgameid]["game"]["player2"]["game"][gottowerheight-1]=games[gotgameid]["running"]
                 games[gotgameid]["running"]=tempitem
 
                 #check winner

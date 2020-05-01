@@ -242,7 +242,7 @@ def showgames(freegames):
     if len(freegames)>0:
 
         for i in range(0,len(freegames)):
-            print(i+1,":",freegames[i]["creator"],freegames[i]["difficulty"]["name"],freegames[i]["difficulty"]["low"],"-",freegames[i]["difficulty"]["high"]," Tower Height:",freegames[i]["difficulty"]["towerheight"]," Questions:",freegames[i]["difficulty"]["getagain"])
+            print(i+1,":",freegames[i]["creator"],freegames[i]["difficulty"]["name"],"Range:",freegames[i]["difficulty"]["low"],"-",freegames[i]["difficulty"]["high"]," Tower Height:",freegames[i]["difficulty"]["towerheight"]," Questions:",freegames[i]["difficulty"]["getagain"])
         
         gamenum=asknumrange("Enter Game ID",len(freegames))
 

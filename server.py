@@ -30,9 +30,9 @@ users={}
 
 games={}
 
-difficulties=[{"name":"easy","high":15,"low":1,"getagain":2,"towerheight":5},{"name":"hard","high":50,"low":1,"getagain":10,"towerheight":20}]
+difficulties=[{"name":"easy","high":15,"low":1,"getagain":2,"towerheight":5},{"name":"hard","high":50,"low":1,"getagain":10,"towerheight":20},{"name":"veryhard","high":100,"low":1,"getagain":15,"towerheight":30}]
 
-# difficulty={"high":15,"low":1,"getagain":2,"towerheight":5}
+
 
 
 

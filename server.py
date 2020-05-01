@@ -101,12 +101,18 @@ def creategame():
     global games
     gameid=str(random.getrandbits(128))
 
-    users[request.sid]["gameid"]=gameid
 
-    gameobj={"gameid":gameid,"creator":users[request.sid]["username"],"player1":request.sid,"p1again":None,"player2":None,"p2again":None,"game":None}
-    games[gameid]=gameobj
-    # print(users)
-    emit("gamecreated")
+    try:
+
+        users[request.sid]["gameid"]=gameid
+
+        gameobj={"gameid":gameid,"creator":users[request.sid]["username"],"player1":request.sid,"p1again":None,"player2":None,"p2again":None,"game":None}
+        games[gameid]=gameobj
+        # print(users)
+        emit("gamecreated")
+
+    except:
+        print("UserName Not created before creating game")
 
 
 
@@ -379,46 +385,52 @@ def joingame(gotgameid):
     global games
     global users
 
-    if games[gotgameid]["player2"]==None:
-        games[gotgameid]["player2"]=request.sid
-        users[request.sid]["gameid"]=gotgameid
-        users[request.sid]["opponent"]=games[gotgameid]["player1"]
-        users[games[gotgameid]["player1"]]["opponent"]=games[gotgameid]["player2"]
+
+    try:
+
+        if games[gotgameid]["player2"]==None:
+            games[gotgameid]["player2"]=request.sid
+            users[request.sid]["gameid"]=gotgameid
+            users[request.sid]["opponent"]=games[gotgameid]["player1"]
+            users[games[gotgameid]["player1"]]["opponent"]=games[gotgameid]["player2"]
 
 
-        # game creation
-        games[gotgameid]["game"]={"gameid":gotgameid,"player1":{"username":users[games[gotgameid]["player1"]]["username"],"score":0,"turn":False,"game":[]},"player2":{"username":users[games[gotgameid]["player2"]]["username"],"score":0,"turn":True,"game":[]}}
-        makegame(gotgameid)
+            # game creation
+            games[gotgameid]["game"]={"gameid":gotgameid,"player1":{"username":users[games[gotgameid]["player1"]]["username"],"score":0,"turn":False,"game":[]},"player2":{"username":users[games[gotgameid]["player2"]]["username"],"score":0,"turn":True,"game":[]}}
+            makegame(gotgameid)
 
-        games[gotgameid]["running"]=getarandom(gotgameid)
+            games[gotgameid]["running"]=getarandom(gotgameid)
 
-        #send their own game to players
+            #send their own game to players
 
 
-        #checking users turn
+            #checking users turn
 
-        if(games[gotgameid]["game"]["player1"]["turn"]==True):
+            if(games[gotgameid]["game"]["player1"]["turn"]==True):
 
-            emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
-        else:
-            emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            else:
+                emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player1"]["username"],"yourscore":games[gotgameid]["game"]["player1"]["score"],"game":games[gotgameid]["game"]["player1"]["game"],"opponentname":games[gotgameid]["game"]["player2"]["username"],"opponentscore":games[gotgameid]["game"]["player2"]["score"],"turn":games[gotgameid]["game"]["player1"]["turn"],"getagain":games[gotgameid]["game"]["player1"]["getagain"]}  ,room=games[gotgameid]["player1"])
+            
+
+
+            if(games[gotgameid]["game"]["player2"]["turn"]==True):
+        
+                emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+            else:
+
+                emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
+
+
+
         
 
-
-        if(games[gotgameid]["game"]["player2"]["turn"]==True):
-       
-            emit("loadinggame",{"running":games[gotgameid]["running"],"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
-
         else:
-
-            emit("loadinggame",{"running":None,"yourname":games[gotgameid]["game"]["player2"]["username"],"yourscore":games[gotgameid]["game"]["player2"]["score"],"game":games[gotgameid]["game"]["player2"]["game"],"opponentname":games[gotgameid]["game"]["player1"]["username"],"opponentscore":games[gotgameid]["game"]["player1"]["score"],"turn":games[gotgameid]["game"]["player2"]["turn"],"getagain":games[gotgameid]["game"]["player2"]["getagain"]}  ,room=games[gotgameid]["player2"])
-
-
-
+            emit("notfree",games[gotgameid]["creator"])
     
-
-    else:
-        emit("notfree",games[gotgameid]["creator"])
+    except:
+        print("Got Wrong Game ID from Joining User")
 
 
 
@@ -431,18 +443,24 @@ def joingame(gotgameid):
 def disconnected():
     global users
     global games
-    users[request.sid]["connected"]=False
-    print(users[request.sid]["username"],"Disconnected")
 
-    opponentid=users[request.sid]["opponent"]
-    gameid=users[request.sid]["gameid"]
+    try:
+        users[request.sid]["connected"]=False
+        print(users[request.sid]["username"],"Disconnected")
 
-    if not(gameid == None):
-        games[gameid]["player2"]="noone"
-    if not(opponentid == None):
-        users[opponentid]["gameid"]=None
-        users[opponentid]["opponent"]=None
-        emit("opponentleft",users[request.sid]["username"],room=opponentid)
+        opponentid=users[request.sid]["opponent"]
+        gameid=users[request.sid]["gameid"]
+
+        if not(gameid == None):
+            games[gameid]["player2"]="noone"
+        if not(opponentid == None):
+            users[opponentid]["gameid"]=None
+            users[opponentid]["opponent"]=None
+            emit("opponentleft",users[request.sid]["username"],room=opponentid)
+
+    except:
+        print("UserName ID not created before Disconnecting")
+
 
 
 if __name__ == '__main__':

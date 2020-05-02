@@ -26,7 +26,7 @@
 
 
 
-print("Tower Blaster Multiplayer Clone Client Made By Huzaifa Irfan")
+print("Tower Blaster MultiPlayer Clone - Python TUI Client Made By Huzaifa Irfan")
 
 
 
@@ -57,7 +57,7 @@ from conf import serveraddress
 ####################
 #Importing
 ####################
-from os import system
+from os import system,name
 import time
 
 
@@ -93,12 +93,17 @@ def menu():
         clearscreen()
         print("C. Create Game")
         print("J. Join Game")
+        print("H. Help")
         print("X. Exit Game")
-        ch=input("Enter Number to Start")
+        ch=input("Enter Letters to Start")
         if ch=="c"or ch=="C":
             exitter("Creating Game")
             sio.emit('getdifficulties')
             exit=True
+        elif ch=="H" or ch=="h":
+            clearscreen()
+            print("Stack Numbers in Increasing order Smaller at top and Larger at Bottom to Win")
+            exitter("To Main Menu")
         elif ch=="j" or ch=="J":
             exitter("Fetching Games")
             sio.emit('fetchgames')
@@ -122,8 +127,18 @@ def menu():
 ####################
 
 def clearscreen():
-    system("cls") ## For Windows Only
-    print("Tower Blaster MultiPlayer Clone - Python TUI Client")
+
+        # for windows 
+    if name == 'nt': 
+        system('cls') 
+        print("\n")
+
+    # for mac and linux(here, os.name is 'posix') 
+    else: 
+        system('clear') 
+        print("\n")
+
+    print("Tower Blaster MultiPlayer Clone - Python TUI Client Made By Huzaifa Irfan")
 
 def exitter(msg):
     print(msg)

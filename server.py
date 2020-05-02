@@ -102,7 +102,7 @@ games={}
 def makegame(gotgameid):
     global games
     #generate game
-    print("Generating Game")
+    print("Generating New Game")
 
     difficulty=games[gotgameid]["difficulty"]
 
@@ -138,6 +138,8 @@ def makegame(gotgameid):
 
 
     games[gotgameid]["game"]["remaining"]=gen
+
+    #print(games[gotgameid])
 
 
 
@@ -229,7 +231,8 @@ def creategame(diffid):
 
         gameobj={"gameid":gameid,"creator":users[request.sid]["username"],"player1":request.sid,"p1again":None,"player2":None,"p2again":None,"game":None,"difficulty":difficulty}
         games[gameid]=gameobj
-        # print(users)
+        print("New Game Created")
+        #print(gameobj)
         emit("gamecreated")
 
     except:

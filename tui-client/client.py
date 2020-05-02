@@ -304,7 +304,7 @@ def playagain():
     print("Do you want to play Again? Y/n ")
     ans=input("")
     if ans=="n"or ans=="N":
-        sio.emit('noplayagain')
+        sio.emit('noplay')
     else:
         sio.emit('playagain')
         print("Waiting for other Player to Respond!!")

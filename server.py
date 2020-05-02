@@ -253,11 +253,11 @@ def fetchgames():
 
 
 ####################
-##### User Doesn't want to Play again
+##### User Doesn't want to Play again or go to main menu
 ####################
 
-@socketio.on('noplayagain')
-def noplayagain():
+@socketio.on('noplay')
+def noplay():
     global games
     global users
 

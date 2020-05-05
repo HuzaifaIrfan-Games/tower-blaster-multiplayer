@@ -16,7 +16,7 @@ difficulties=[
     ,{"name":"Normal","high":40,"low":1,"getagain":5,"towerheight":10}
     ,{"name":"Hard","high":50,"low":1,"getagain":10,"towerheight":20}
     ,{"name":"Very Hard","high":100,"low":1,"getagain":15,"towerheight":30}
-    ,{"name":"Heroic","high":150,"low":1,"getagain":20,"towerheight":40}
+    # ,{"name":"Heroic","high":150,"low":1,"getagain":20,"towerheight":40}
     ]
 
 

@@ -191,7 +191,7 @@ def senddifficulties(levels):
         print(i+1,":",levels[i]["name"],"Range:",levels[i]["low"],"-",levels[i]["high"],"Tower Height:",levels[i]["towerheight"],"Questions:",levels[i]["getagain"])
 
     num=asknumrange("Select Difficulty ID",len(levels))
-
+    #num = 1-range len(levels) included
     sio.emit('creategame',num)
 
 
@@ -391,6 +391,7 @@ def showgames(freegames):
         
         gamenum=asknumrange("Enter Game ID",len(freegames))
 
+        #send the game id of the user
         sio.emit('joingame', freegames[gamenum-1]["gameid"])
 
 

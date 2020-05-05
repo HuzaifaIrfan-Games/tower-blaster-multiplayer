@@ -78,6 +78,22 @@ socketio = SocketIO(app, async_mode=async_mode)
 
 
 
+
+
+
+@app.route('/public/<path:path>')
+def send_file(path):
+    return send_from_directory('gui-client', path)
+
+
+#starting Route
+@app.route('/')
+def index():
+    return send_from_directory('gui-client', "index.html")
+
+
+
+
 ##############################################################################################################
 ############################  User and Games dictionary lists Configurations  ################################
 ##############################################################################################################
@@ -247,10 +263,12 @@ def creategame(diffid):
 @socketio.on('fetchgames')
 def fetchgames():
     global games
+    global users
     freegames=[]
     for game in games.values():
-        if game["player2"]==None:
-            freegames.append(game)
+        if users[game["player1"]]["gameid"]==game["gameid"]:
+            if game["player2"]==None:
+                freegames.append(game)
 
     emit("showgames",freegames)
 
@@ -268,22 +286,24 @@ def noplay():
     opponentid=users[request.sid]["opponent"]
     gotgameid=users[request.sid]["gameid"]
 
-    users[opponentid]["gameid"]=None
-    users[opponentid]["opponent"]=None
+    if not(opponentid ==None):
+        users[opponentid]["gameid"]=None
+        users[opponentid]["opponent"]=None
+        emit("opponentleft",users[request.sid]["username"],room=opponentid)
 
     users[senderid]["gameid"]=None
     users[senderid]["opponent"]=None
 
-    emit("opponentleft",users[request.sid]["username"],room=opponentid)
+    
 
     emit("tomainmenu",room=senderid)
 
     
-    if games[gotgameid]["player1"]==senderid:
-        games[gotgameid]["p1again"]=False
+    # if games[gotgameid]["player1"]==senderid:
+    #     games[gotgameid]["p1again"]=False
 
-    if games[gotgameid]["player2"]==senderid:
-        games[gotgameid]["p2again"]=False
+    # if games[gotgameid]["player2"]==senderid:
+    #     games[gotgameid]["p2again"]=False
 
 
 ####################

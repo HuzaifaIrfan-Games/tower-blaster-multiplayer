@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html
+><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Huzaifa Irfan">
+
+
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script defer src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+   -->
+
+    <link rel="stylesheet" type="text/css" href="/public/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/style.css">
+
+    <script defer src="/public/socket.io.js" crossorigin="anonymous"></script>
+    
+  </head>
+  <body>
+
+
+
+    
+<div id="header">
+  <h1 align="center">Tower Blaster - Multiplayer</h1>
+  <h5 align="center" ></h5>
+</div>
+
+
+<div class="container">
+
+    <div id="mainmenu">
+<h1 align="center">Main Menu</h1>
+
+<div class="buttons">
+
+
+      <input type="button" onclick="getdifficulties()" class="btn-success" value="Start Game">
+      
+      <input type="button" onclick="getfreegames()" class="btn-success" value="Fetch Game">
+      
+      <input type="button" onclick="showhelpmenu()" class="btn-success" value="Help!!">
+    </div>
+
+    </div>
+
+
+    <div id="startgamemenu">
+<h1 align="center">Start Game Menu</h1>
+<div id="diffmenu" class="buttons">
+
+</div>
+
+    </div>
+
+
+    <div id="fetchgamemenu">
+      <h1 align="center">Fetch Game Menu</h1>
+
+      <div id="freegamesmenu" class="buttons scrollable">
+
+      </div>
+
+    </div>
+
+
+    <div id="helpmenu">
+      <h1 align="center">Help</h1>
+
+         
+   <div class=buttons>
+   <h4>Build Your Tower First in accending order</h4>
+
+
+
+
+   <input type="button" onclick="showmainmenu()" class="btn-danger" value="Main Menu">
+   </div>
+
+
+    </div>
+
+
+    <div id="TheGame" class="container">
+      <h1 align="center">The Game</h1>
+   <p>Hehehe</p>
+    </div>
+
+
+
+
+
+
+
+
+
+  </div>
+
+
+
+  <footer id="footer">
+    <div class="text-center ">
+      <small><b> Copyright &copy; <a href="http://skiie.com/" style="text-decoration: none;">skiie</a> 2020</b> </small>
+      <br>
+      <small><b> Developed By <a href="http://facebook.com/huzaifairfan2001" style="text-decoration: none;">Huzaifa Irfan</a></b> </small>
+    </div>
+
+</footer>
+
+    <script defer src="/public/script.js"></script>
+  
+</body>
+</html>

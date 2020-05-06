@@ -1,1 +1,1 @@
-serveraddress='http://192.168.137.114:3050/'
+serveraddress='http://127.0.0.1:3050/'

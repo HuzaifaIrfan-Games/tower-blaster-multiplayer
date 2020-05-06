@@ -234,7 +234,7 @@ def creategame(diffid):
     global difficulties
 
     #generate random Game ID
-    gameid=str(random.getrandbits(128))
+    gameid=str(random.getrandbits(16))
 
     if (diffid>0 and diffid<=len(difficulties)):
         difficulty=difficulties[diffid-1]
@@ -539,7 +539,8 @@ def changetower(gottowerheight):
 def joingame(gotgameid):
     global games
     global users
-
+    gotgameid=str(gotgameid)
+    print(gotgameid)
     try:
 
         if games[gotgameid]["player2"]==None:

@@ -22,6 +22,8 @@ localStorage.setItem("name" , `${name}`)
     
     socket.emit("Connection", name)
 
+    showmainmenu()
+
 
 
 
@@ -66,6 +68,35 @@ function showhelpmenu(){
 
 function showmainmenu(){
   socket.emit('noplay')
+
+
+
+  var mainmenu=document.getElementById("mainmenu")
+
+  mainmenu.innerHTML=`
+
+  <h1 align="center">Main Menu</h1>
+
+  <h3 align="center">Asalaam O Alaikum, ${name} </h3>
+
+  <div class="buttons">
+  
+  
+        <input type="button" onclick="getdifficulties()" class="btn-success" value="Start Game">
+        
+        <input type="button" onclick="getfreegames()" class="btn-success" value="Fetch Game">
+  
+        <input type="button" onclick="showsettings()" class="btn-success" value="Settings">
+        
+        <input type="button" onclick="showhelpmenu()" class="btn-success" value="Help!!">
+      </div>
+
+
+`
+
+
+
+
   hideall()
   document.getElementById("mainmenu").style.display = "block";
 }
@@ -457,15 +488,11 @@ socket.on("looser", obj => {
 
 
 
-        // sio.emit('playagain')
-        // print("Waiting for other Player to Respond!!")
-
-
-
-
-
 socket.on("disconnect", () => {
 console.log("Disconnected from server")
 hideall()
 document.getElementById("mainmenu").style.display = "block";
 })
+
+
+

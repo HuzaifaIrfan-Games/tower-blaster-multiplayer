@@ -112,7 +112,7 @@ games={}
 
 
 ####################
-#new game generator
+# new game generator
 ####################
 
 def makegame(gotgameid):

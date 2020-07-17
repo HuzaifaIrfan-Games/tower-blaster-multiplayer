@@ -83,13 +83,13 @@ socketio = SocketIO(app, async_mode=async_mode)
 
 @app.route('/public/<path:path>')
 def send_file(path):
-    return send_from_directory('gui-client', path)
+    return send_from_directory('web-client', path)
 
 
 #starting Route
 @app.route('/')
 def index():
-    return send_from_directory('gui-client', "index.html")
+    return send_from_directory('web-client', "index.html")
 
 
 

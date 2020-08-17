@@ -4,6 +4,11 @@
 Build the Tower in Accending order before your Opponent
 
 
+## GamePlay Screen Shot
+![Game Play](/img/gameplay.png)
+
+
+
 ### Installing Dependencies
 > pip install -r req.txt 
 

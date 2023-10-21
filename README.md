@@ -1,40 +1,58 @@
-# TowerBlaster-MP-Clone
+<br />
 
-### Game Instructions
+<div align="center">
+  <h1>TowerBlaster-MP-Clone</h1>
+  <p><h3 align="center">Web SocketIO based Multiplayer Game 🚀</h3></p>
+</div>
+
+<hr>
+
+
+<div align="center">
+
+
+![Game Play](/img/gameplay.png)
+</div>
+
+## Info
+
+Start : Apr 28, 2020 
+ <br>
+Completion : May 7, 2020
+
+### Gameplay
 Build the Tower in Accending order before your Opponent
 
 
-## GamePlay Screen Shot
-![Game Play](/img/gameplay.png)
-
-
-
 ### Installing Dependencies
-> pip install -r req.txt 
+```bash
+pip install -r requirements.txt
+```
 
 ### Running the Server and Web GUI Client
-> python server.py
+```bash
+python server.py
+```
 
 ### Running the (CLI/TUI) Client
-> python tui-client/client.py
-
-
-
-### Contact
-* Email : [huzaifairfan2001@gmail.com](mailto:huzaifairfan2001@gmail.com)
-* Facebook : [huzaifairfan2001@facebook](https://www.facebook.com/huzaifairfan2001)
-
-
-<div>
- TowerBlaster-MP-Clone Project
- <br>
-Start : Apr 28, 2020 
- <br>
- Completion : May 7, 2020
- <br>
- By Huzaifa Irfan
- </div>
+```bash
+python tui-client/client.py
+```
 
 
 
 
+## 🤝🏻 &nbsp;Connect with Me
+
+<p align="center">
+<a href="https://www.huzaifairfan.com"><img src="https://img.shields.io/badge/-huzaifairfan.com-1aa260?style=flat&logo=Google-Chrome&logoColor=white"/></a>
+<a href="https://www.linkedin.com/in/huzaifairfan/"><img src="https://img.shields.io/badge/-Huzaifa%20Irfan-0072b1?style=flat&logo=Linkedin&logoColor=white"/></a>
+<a href="https://github.com/HuzaifaIrfan/"><img src="https://img.shields.io/badge/-Huzaifa%20Irfan-4078c0?style=flat&logo=Github&logoColor=white"/></a>
+<a href="mailto:contact@huzaifairfan.com"><img src="https://img.shields.io/badge/-contact@huzaifairfan.com-c71610?style=flat&logo=Gmail&logoColor=white"/></a>
+<a href="https://www.instagram.com/huzaifairfan2001/"><img src="https://img.shields.io/badge/-@huzaifairfan2001-cd486b?style=flat&logo=Instagram&logoColor=white"/></a>
+<a href="https://www.facebook.com/huzaifairfan2001/"><img src="https://img.shields.io/badge/-@huzaifairfan2001-4267B2?style=flat&logo=Facebook&logoColor=white"/></a>
+</p>
+
+## License
+
+Licensed under the MIT License, Copyright 2023 Huzaifa Irfan. [LICENSE](LICENSE)

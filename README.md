@@ -11,8 +11,7 @@
 ## Info
 
 Start : Apr 28, 2020 
- <br>
-Completion : May 7, 2020
+
 
 # 🚀 Usage
 
@@ -48,3 +47,5 @@ python tui-client/client.py
 # 📜 License
 
 Licensed under the GPL3 License, Copyright 2025 Huzaifa Irfan. [LICENSE](LICENSE)
+
+Last Updated on 2020-05-07
